@@ -1,0 +1,3 @@
+# The EPL website is written in EPL itself. The build driver (build.py) renders
+# src/main.epl through the published EPL compiler. Pin to a known-good release.
+epl>=9.7.0
