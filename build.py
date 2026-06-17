@@ -109,8 +109,8 @@ def fix_headings(html: str) -> str:
     return html
 
 
-# Canonical absolute URL of the deployed site (Azure Static Web App host).
-SITE_URL = 'https://wonderful-desert-081e2a400.7.azurestaticapps.net/'
+# Canonical absolute URL of the deployed site (custom domain).
+SITE_URL = 'https://eplang.me/'
 
 
 def inject_meta(html: str) -> str:
