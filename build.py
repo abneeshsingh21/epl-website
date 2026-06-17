@@ -80,6 +80,59 @@ def rewrite_links(html: str) -> str:
     return html
 
 
+def fix_headings(html: str) -> str:
+    """Repair the homepage heading hierarchy WITHOUT changing the visible layout.
+
+    The DSL emits `Heading` as a bare <h1> (so the footer column labels became the
+    page's only <h1>s) while the real headlines are styled <div>s that contain <p>
+    elements. We can't simply turn those divs into <h1>/<h2> -- a <p> is illegal
+    inside a heading, so the browser would auto-close the heading and eject the
+    text, breaking the layout. Instead:
+
+      * demote the bogus footer <h1>s to <h2> (their content is plain text -> valid),
+      * inject one real, visually-hidden <h1> carrying the hero headline (SEO + SR),
+      * mark the visible section headlines as ARIA headings (no DOM/layout change).
+    """
+    # footer column labels (bare <h1>, plain text) -> <h2>
+    html = re.sub(r'<h1>(.*?)</h1>', r'<h2>\1</h2>', html, flags=re.S)
+
+    # one real <h1> for search engines and screen readers (visually hidden)
+    hero_h1 = ('<h1 class="sr-only">Write code the way you think. '
+               'In plain English.</h1>')
+    html = re.sub(r'(<header class="hero"[^>]*>)', r'\1' + hero_h1, html, count=1)
+
+    # give the visible section / CTA headlines heading semantics (ARIA only)
+    html = re.sub(r'<div class="sec-h([^"]*)">',
+                  r'<div role="heading" aria-level="2" class="sec-h\1">', html)
+    html = re.sub(r'<div class="cta-h([^"]*)">',
+                  r'<div role="heading" aria-level="2" class="cta-h\1">', html)
+    return html
+
+
+# Canonical absolute URL of the deployed site (Azure Static Web App host).
+SITE_URL = 'https://wonderful-desert-081e2a400.7.azurestaticapps.net/'
+
+
+def inject_meta(html: str) -> str:
+    """Add og:image / og:url / og:site_name / twitter:image to <head>.
+
+    The DSL parser treats `image`/`url`/`site_name` as reserved keywords and drops
+    them from OpenGraph/Twitter directives, so these tags can't be authored in the
+    .epl source. We inject them here, after the og:title tag the DSL does emit.
+    """
+    tags = (
+        f'<meta property="og:image" content="{SITE_URL}og.png">'
+        f'<meta property="og:url" content="{SITE_URL}">'
+        f'<meta property="og:site_name" content="EPL">'
+        f'<meta name="twitter:image" content="{SITE_URL}og.png">'
+        f'<link rel="canonical" href="{SITE_URL}">'
+    )
+    anchor = '<meta property="og:title"'
+    if anchor in html and 'og:image' not in html:
+        html = html.replace(anchor, tags + anchor, 1)
+    return html
+
+
 def main():
     out_dir = os.path.join(HERE, 'dist')
     if '--out' in sys.argv:
@@ -115,6 +168,9 @@ def main():
         for route, fname in ROUTES.items():
             html = urllib.request.urlopen(base + route, timeout=10).read().decode('utf-8')
             html = rewrite_links(html)
+            if route == '/':
+                html = fix_headings(html)
+                html = inject_meta(html)
             path = os.path.join(out_dir, fname)
             with open(path, 'w', encoding='utf-8') as fh:
                 fh.write(html)
@@ -130,6 +186,13 @@ def main():
                 with open(os.path.join(out_dir, 'CNAME'), 'w', encoding='utf-8') as fh:
                     fh.write(domain + '\n')
                 written.append(('CNAME', len(domain)))
+
+        # social preview image: copy alongside the HTML if present
+        og_src = os.path.join(HERE, 'assets', 'og.png')
+        if os.path.exists(og_src):
+            import shutil
+            shutil.copy(og_src, os.path.join(out_dir, 'og.png'))
+            written.append(('og.png', os.path.getsize(og_src)))
 
         print(f'Static site exported to: {out_dir}')
         for fname, size in written:

@@ -7,7 +7,7 @@ Note: Accessibility: focus-visible + full prefers-reduced-motion fallback. Page 
 Create WebApp called epl_site
 
 Head
-    Description "EPL is a fully-featured programming language with plain-English syntax. Bytecode VM, LLVM native compilation, eight compilation targets, 725+ builtins, and a 22-package ecosystem."
+    Description "EPL is a real programming language with plain-English syntax: a bytecode VM, LLVM-native compilation, eight targets, and 725+ built-ins."
     ThemeColor "#FFFFFF"
     Meta "color-scheme" "light"
     Meta "robots" "index,follow"
@@ -20,7 +20,7 @@ End
 Route "/" shows
     Page "EPL — The English Programming Language"
         OpenGraph title "EPL — The English Programming Language" description "Write code the way you think. In plain English. A real language: VM, LLVM native, WASM, mobile — 725+ builtins." type "website"
-        Twitter card "summary_large_image"
+        Twitter card "summary_large_image" title "EPL — The English Programming Language" description "Write code the way you think. In plain English. A real language with a bytecode VM, LLVM-native compilation, and 725+ built-ins."
 
         Stylesheet
                 :root{
@@ -44,6 +44,9 @@ Route "/" shows
                 }
                 *{box-sizing:border-box}
                 html{scroll-behavior:smooth}
+                /* visually-hidden (screen-reader / SEO only) */
+                .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;
+                    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
                 body{margin:0;background:var(--ink);color:var(--paper);
                     font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
                     font-weight:400;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;
@@ -72,7 +75,7 @@ Route "/" shows
                 .ping p{display:none}
                 @keyframes ping{0%{box-shadow:0 0 0 0 rgba(79,70,229,.45)}70%,100%{box-shadow:0 0 0 9px rgba(79,70,229,0)}}
                 .serif{font-weight:600}
-                .section{padding:clamp(86px,11vw,156px) 0;position:relative;z-index:2}
+                .section{padding:clamp(72px,8vw,118px) 0;position:relative;z-index:2}
                 .sec-head{margin-bottom:clamp(40px,6vw,72px)}
                 .sec-h{font-family:var(--display);font-size:clamp(2.1rem,4.8vw,3.7rem);line-height:1.04;letter-spacing:-.03em;margin:18px 0 0;font-weight:600}
 
@@ -108,16 +111,51 @@ Route "/" shows
                     padding:10px 20px;border-radius:999px;font-weight:600;display:inline-block;
                     transition:transform .25s var(--ease),box-shadow .25s}
                 .nav-cta-wrap a:hover{transform:translateY(-1px);box-shadow:0 10px 30px -10px rgba(17,17,19,.4)}
-                @media(max-width:860px){.nav-links{display:none}}
+                /* mobile nav toggle (hidden on desktop) */
+                .nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:42px;
+                    cursor:pointer;border-radius:10px;position:relative;z-index:96}
+                .nav-toggle-bar{display:block;width:22px;height:2px;margin:0 auto;border-radius:2px;background:var(--paper);
+                    transition:transform .3s var(--ease),opacity .25s}
+                .nav-toggle p{display:none}
+                .nav.open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
+                .nav.open .nav-toggle-bar:nth-child(2){opacity:0}
+                .nav.open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+                /* skip-to-content link (revealed on keyboard focus) */
+                .skip-link-wrap a{position:fixed;top:-64px;left:12px;z-index:200;background:var(--paper);color:#fff;
+                    padding:11px 18px;border-radius:9px;font-size:14px;font-weight:600;
+                    transition:top .25s var(--ease)}
+                .skip-link-wrap a:focus{top:12px;outline:2px solid var(--accent);outline-offset:2px}
+                @media(max-width:860px){
+                    .nav-toggle{display:flex}
+                    .nav-links{display:flex;position:fixed;top:0;right:0;bottom:0;width:min(80vw,330px);
+                        flex-direction:column;align-items:flex-start;gap:6px;padding:92px 28px 28px;
+                        background:rgba(255,255,255,.97);backdrop-filter:saturate(160%) blur(18px);
+                        border-left:1px solid var(--line-soft);box-shadow:-24px 0 60px -30px rgba(17,17,19,.35);
+                        transform:translateX(105%);transition:transform .42s var(--ease);z-index:95}
+                    .nav.open .nav-links{transform:translateX(0)}
+                    .nav-links a{font-size:17px;padding:8px 0}
+                }
 
                 /* hero — centered composition */
-                .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+                .hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
                     text-align:center;padding:150px var(--gut) 90px;position:relative;overflow:hidden;isolation:isolate}
                 .orbital{position:absolute;inset:0;z-index:0;pointer-events:none}
                 .hero::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
                     background:radial-gradient(620px circle at var(--hx,50%) var(--hy,46%),rgba(124,58,237,.07),transparent 62%)}
+                /* aurora: slow drifting gradient-mesh glow for depth behind the particles */
+                .hero::before{content:'';position:absolute;inset:-15% -10% 0;z-index:0;pointer-events:none;
+                    background:
+                        radial-gradient(38% 44% at 22% 30%,rgba(0,125,243,.10),transparent 70%),
+                        radial-gradient(34% 40% at 80% 26%,rgba(124,92,255,.09),transparent 70%),
+                        radial-gradient(40% 38% at 62% 76%,rgba(46,160,255,.07),transparent 72%);
+                    filter:blur(8px);opacity:.9;animation:hero-aurora 22s ease-in-out infinite alternate}
+                @keyframes hero-aurora{
+                    0%{transform:translate3d(0,0,0) scale(1)}
+                    50%{transform:translate3d(-2.5%,1.5%,0) scale(1.06)}
+                    100%{transform:translate3d(2%,-1%,0) scale(1.03)}
+                }
                 .hero-grain{display:none}
-                .hero > *:not(.orbital){position:relative;z-index:2}
+                .hero > *:not(.orbital):not(.hero-scroll){position:relative;z-index:2}
                 .hero-eyebrow{margin-bottom:30px}
                 .hero-lockup{display:inline-flex;align-items:center;gap:13px;font-family:var(--display);font-weight:700;
                     font-size:clamp(22px,3vw,30px);letter-spacing:-.02em;margin-bottom:24px;color:var(--paper)}
@@ -129,23 +167,39 @@ Route "/" shows
                 .hero-badge p{display:inline}
                 .hero-h{font-family:var(--display);font-weight:500;font-size:clamp(2.9rem,7.6vw,6.2rem);line-height:1;letter-spacing:-.035em;
                     margin:0;max-width:17ch;color:var(--paper)}
-                .hero-h .g{color:var(--muted)}
-                .hero-asterisk{color:var(--c3);font-weight:400}
+                .hero-h .g{background:linear-gradient(100deg,#007DF3 0%,#2EA0FF 22%,#7C5CFF 48%,#2EA0FF 74%,#007DF3 100%);
+                    background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+                    -webkit-text-fill-color:transparent;animation:hero-flow 9s linear infinite}
+                @keyframes hero-flow{to{background-position:220% 0}}
                 .hero-sub{margin:32px auto 0;max-width:56ch;font-size:clamp(1.08rem,1.5vw,1.35rem);
                     line-height:1.6;color:var(--paper-dim);font-weight:400}
                 .btn-row{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:40px}
                 .btn-row a{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:15.5px;
                     padding:15px 26px;border-radius:999px;will-change:transform;
                     transition:transform .3s var(--ease),gap .3s var(--ease),background .3s,box-shadow .3s,border-color .3s}
-                .btn-row a:first-child{background:var(--paper);color:#FFF;
-                    box-shadow:0 18px 40px -18px rgba(17,17,19,.5)}
+                .btn-row a:first-child{position:relative;overflow:hidden;color:#FFF;
+                    background:linear-gradient(120deg,#0A52C0 0%,#007DF3 42%,#2EA0FF 100%);
+                    box-shadow:0 18px 40px -18px rgba(0,125,243,.6)}
+                .btn-row a:first-child::after{content:'';position:absolute;top:0;left:-60%;width:45%;height:100%;
+                    background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);
+                    transform:skewX(-18deg);transition:left .6s var(--ease);pointer-events:none}
                 .btn-row a:first-child:hover{gap:15px;transform:translateY(-2px);
-                    box-shadow:0 24px 54px -18px rgba(17,17,19,.6)}
+                    box-shadow:0 26px 58px -16px rgba(0,125,243,.7)}
+                .btn-row a:first-child:hover::after{left:130%}
                 .btn-row a:nth-child(2){border:1px solid var(--line);color:var(--paper);background:var(--ink)}
                 .btn-row a:nth-child(2):hover{border-color:var(--paper);transform:translateY(-2px)}
                 .hero-meta{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;margin-top:42px;
                     font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--paper-faint);letter-spacing:.03em}
                 .hero-meta p{display:inline}
+                .hero-scroll{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);z-index:3;
+                    width:24px;height:40px;border:2px solid color-mix(in srgb,var(--paper) 30%,transparent);
+                    border-radius:999px;opacity:.85;animation:hero-scroll-fade 4s ease-in-out infinite}
+                .hero-scroll::before{content:'';position:absolute;left:50%;top:8px;width:4px;height:8px;border-radius:999px;
+                    background:var(--accent);transform:translateX(-50%);
+                    animation:hero-scroll-dot 1.9s var(--ease) infinite}
+                @keyframes hero-scroll-dot{0%{opacity:0;transform:translate(-50%,0)}
+                    25%{opacity:1}60%{opacity:1}100%{opacity:0;transform:translate(-50%,14px)}}
+                @keyframes hero-scroll-fade{0%,100%{opacity:.85}50%{opacity:.45}}
 
                 /* stats */
                 .stats{display:grid;grid-template-columns:repeat(4,1fr);
@@ -262,7 +316,8 @@ Route "/" shows
                 .audience-card:hover{transform:translateY(-5px);border-color:color-mix(in srgb, var(--ac) 44%, var(--line));box-shadow:0 32px 70px -44px var(--ac)}
                 .audience-card:hover::before{opacity:1}
                 .audience-card:hover::after{opacity:.9}
-                .audience-icon{width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;line-height:1;margin-bottom:22px;border-radius:15px;border:1px solid color-mix(in srgb, var(--ac) 32%, var(--line));background:linear-gradient(150deg, color-mix(in srgb, var(--ac) 18%, var(--ink-2)), var(--ink-2));box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+                .audience-icon{width:54px;height:54px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;border-radius:15px;border:1px solid color-mix(in srgb, var(--ac) 30%, var(--line));background:linear-gradient(150deg, color-mix(in srgb, var(--ac) 14%, var(--ink-2)), var(--ink-2));box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+                .audience-icon svg{width:26px;height:26px;display:block;color:var(--ac);stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;fill:none}
                 .audience-icon p{display:inline}
                 .audience-title{font-family:var(--display);font-size:1.34rem;font-weight:600;letter-spacing:-.02em;margin-bottom:12px;color:var(--paper)}
                 .audience-title p{display:inline}
@@ -324,7 +379,7 @@ Route "/" shows
                 .cta::before{content:'';position:absolute;inset:0;z-index:0;background-image:radial-gradient(rgba(17,17,19,.08) 1.1px, transparent 1.1px);background-size:26px 26px;-webkit-mask-image:radial-gradient(ellipse 72% 64% at 50% 44%, transparent 0%, transparent 30%, black 88%);mask-image:radial-gradient(ellipse 72% 64% at 50% 44%, transparent 0%, transparent 30%, black 88%);pointer-events:none}
                 /* soft blue-violet bloom behind the headline */
                 .cta::after{content:'';position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);width:min(940px,92%);height:560px;z-index:0;background:radial-gradient(ellipse at center, rgba(46,160,255,.18), rgba(124,92,255,.11) 42%, transparent 72%);filter:blur(18px);pointer-events:none}
-                .cta-h{font-family:var(--display);font-size:clamp(2.7rem,7.4vw,6rem);line-height:1.02;letter-spacing:-.035em;font-weight:500;position:relative;z-index:2}
+                .cta-h{font-family:var(--display);font-size:clamp(2.7rem,7.4vw,6rem);line-height:1.02;letter-spacing:-.035em;font-weight:500;position:relative;z-index:2;margin:0}
                 .cta-h .serif,.cta-h .g{color:var(--muted);font-weight:500}
                 .cta-sub{margin:26px auto 40px;max-width:44ch;font-size:1.12rem;color:var(--paper-dim);line-height:1.6;position:relative;z-index:2}
                 .cta-actions{justify-content:center;position:relative;z-index:2}
@@ -337,7 +392,7 @@ Route "/" shows
                     background:var(--logo) center/contain no-repeat}
                 .foot-mark p{display:inline}
                 .foot-tag{margin-top:16px;font-size:14px;color:var(--paper-dim);max-width:30ch;line-height:1.55}
-                .foot-col h1{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;
+                .foot-col h2{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;
                     text-transform:uppercase;color:var(--paper-faint);margin:0 0 20px;font-weight:500}
                 .foot-col a{display:block;font-size:14px;color:var(--paper-dim);margin-bottom:13px;transition:color .2s,padding-left .2s}
                 .foot-col a:hover{color:var(--paper);padding-left:4px}
@@ -367,9 +422,17 @@ Route "/" shows
                     *{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
                     .reveal{opacity:1!important;transform:none!important;filter:none!important}
                     .orbital{display:none!important}
+                    .hero::before{display:none!important}
+                    .hero-scroll{display:none!important}
+                    .hero-h .g{background:none!important;color:var(--accent)!important;-webkit-text-fill-color:var(--accent)!important}
                     .mq-track{animation:none!important}
                 }
                 
+        End
+
+        Note: ── Skip link (keyboard / screen-reader landmark) ─────────────
+        Div class "skip-link-wrap"
+            Link "Skip to content" to "#top"
         End
 
         Note: ── Scroll progress ──────────────────────────────────────────
@@ -390,6 +453,14 @@ Route "/" shows
             End
             Div class "nav-cta-wrap"
                 Link "Install" to "#install"
+            End
+            Div class "nav-toggle" id "navToggle"
+                Span class "nav-toggle-bar"
+                End
+                Span class "nav-toggle-bar"
+                End
+                Span class "nav-toggle-bar"
+                End
             End
         End
 
@@ -426,6 +497,8 @@ Route "/" shows
                 Span class "m"
                     Text "1,700+ tests"
                 End
+            End
+            Div class "hero-scroll"
             End
         End
 
@@ -611,12 +684,12 @@ Route "/" shows
             Div class "wrap"
                 Div class "sec-head"
                     Div class "eyebrow reveal"
-                        Text "Why it holds up"
+                        Text "Production fundamentals"
                     End
                     Div class "sec-h reveal dly-1"
-                        Text "Built like a language, "
+                        Text "Engineered as "
                         Span class "g"
-                            Text "not a toy."
+                            Text "real infrastructure."
                         End
                     End
                 End
@@ -870,6 +943,18 @@ Route "/" shows
                         Text "epl-test"
                     End
                     Div class "pkg"
+                        Text "epl-algo"
+                    End
+                    Div class "pkg"
+                        Text "epl-collections"
+                    End
+                    Div class "pkg"
+                        Text "epl-string"
+                    End
+                    Div class "pkg"
+                        Text "epl-struct"
+                    End
+                    Div class "pkg"
                         Text "epl-web"
                     End
                     Div class "pkg"
@@ -923,6 +1008,18 @@ Route "/" shows
                     Div class "pkg"
                         Text "epl-test"
                     End
+                    Div class "pkg"
+                        Text "epl-algo"
+                    End
+                    Div class "pkg"
+                        Text "epl-collections"
+                    End
+                    Div class "pkg"
+                        Text "epl-string"
+                    End
+                    Div class "pkg"
+                        Text "epl-struct"
+                    End
                 End
             End
         End
@@ -944,8 +1041,7 @@ Route "/" shows
 
                 Div class "audience-grid"
                     Div class "audience-card spot reveal"
-                        Div class "audience-icon"
-                            Text "🎓"
+                        Div class "audience-icon" id "ico-students"
                         End
                         Div class "audience-title"
                             Text "Students & Beginners"
@@ -959,8 +1055,7 @@ Route "/" shows
                     End
 
                     Div class "audience-card spot reveal dly-1"
-                        Div class "audience-icon"
-                            Text "👩‍🏫"
+                        Div class "audience-icon" id "ico-educators"
                         End
                         Div class "audience-title"
                             Text "Educators & Institutions"
@@ -974,8 +1069,7 @@ Route "/" shows
                     End
 
                     Div class "audience-card spot reveal dly-2"
-                        Div class "audience-icon"
-                            Text "🛠️"
+                        Div class "audience-icon" id "ico-developers"
                         End
                         Div class "audience-title"
                             Text "Professional Developers"
@@ -989,8 +1083,7 @@ Route "/" shows
                     End
 
                     Div class "audience-card spot reveal dly-3"
-                        Div class "audience-icon"
-                            Text "🤖"
+                        Div class "audience-icon" id "ico-ai"
                         End
                         Div class "audience-title"
                             Text "AI & Automation"
@@ -1011,12 +1104,12 @@ Route "/" shows
             Div class "wrap"
                 Div class "sec-head"
                     Div class "eyebrow reveal"
-                        Text "Try it now"
+                        Text "Live playground"
                     End
                     Div class "sec-h reveal dly-1"
                         Text "Run EPL "
                         Span class "g"
-                            Text "right here."
+                            Text "in your browser."
                         End
                     End
                     Div class "split-p reveal dly-2"
@@ -1169,6 +1262,29 @@ Route "/" shows
             (function () {
                 var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+                // ── Audience icons: professional inline line-icons (replace emoji) ──
+                (function setAudienceIcons() {
+                    var P = 'http://www.w3.org/2000/svg';
+                    function svg(paths) {
+                        var s = '<svg xmlns="' + P + '" viewBox="0 0 24 24" aria-hidden="true">' + paths + '</svg>';
+                        return s;
+                    }
+                    var ICONS = {
+                        // graduation cap — students & beginners
+                        'ico-students': svg('<path d="M2 8.5 12 4l10 4.5-10 4.5L2 8.5Z"/><path d="M6 10.5V15c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/><path d="M22 8.5V14"/>'),
+                        // presentation board — educators & institutions
+                        'ico-educators': svg('<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4"/><path d="M8 20h8"/><path d="M7.5 11.5 10 9l2 2 3-3.5"/>'),
+                        // terminal/tools — professional developers
+                        'ico-developers': svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3"/><path d="M13 15h4"/>'),
+                        // chip/AI — AI & automation
+                        'ico-ai': svg('<rect x="6.5" y="6.5" width="11" height="11" rx="2"/><path d="M9.5 9.5h5v5h-5z"/><path d="M9 3v2M15 3v2M9 19v2M15 19v2M3 9h2M3 15h2M19 9h2M19 15h2"/>')
+                    };
+                    Object.keys(ICONS).forEach(function (id) {
+                        var el = document.getElementById(id);
+                        if (el) el.innerHTML = ICONS[id];
+                    });
+                })();
+
                 // ── Hidey glass nav (Antigravity-style): glass on scroll, hide down / show up ──
                 var nav = document.getElementById('nav');
                 var prog = document.querySelector('.scroll-progress');
@@ -1179,7 +1295,7 @@ Route "/" shows
                         nav.classList.toggle('scrolled', sc > 36);
                         var hide = sc > 140 && sc > lastY + 4;
                         var show = sc < lastY - 4 || sc < 140;
-                        if (hide) nav.classList.add('hidden');
+                        if (hide && !nav.classList.contains('open')) nav.classList.add('hidden');
                         else if (show) nav.classList.remove('hidden');
                     }
                     if (prog) {
@@ -1193,6 +1309,22 @@ Route "/" shows
                     if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
                 }, { passive: true });
                 onScroll();
+
+                // ── Mobile nav: hamburger toggles the slide-in menu ──
+                var navToggle = document.getElementById('navToggle');
+                if (navToggle && nav) {
+                    navToggle.setAttribute('role', 'button');
+                    navToggle.setAttribute('tabindex', '0');
+                    navToggle.setAttribute('aria-label', 'Toggle navigation menu');
+                    function toggleMenu() { nav.classList.toggle('open'); }
+                    navToggle.addEventListener('click', toggleMenu);
+                    navToggle.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMenu(); }
+                    });
+                    nav.querySelectorAll('.nav-links a, .nav-cta-wrap a').forEach(function (a) {
+                        a.addEventListener('click', function () { nav.classList.remove('open'); });
+                    });
+                }
 
                 function countUp(el) {
                     var raw = el.getAttribute('data-raw') || el.textContent.trim();
@@ -1279,7 +1411,8 @@ Route "/" shows
                         mouse.y = (e.clientY - r.top) / r.height;
                         mouse.has = true;
                     });
-                    var t = 0;
+                    var t = 0, running = false, onScreen = true, pageVisible = true;
+                    function loopActive() { return onScreen && pageVisible && !document.hidden; }
                     function draw() {
                         var maxR = Math.hypot(W, H) * 0.52;
                         ctx.clearRect(0, 0, W, H);
@@ -1306,9 +1439,19 @@ Route "/" shows
                         }
                         ctx.globalAlpha = 1;
                         t += 0.006;
-                        requestAnimationFrame(draw);
+                        if (loopActive()) requestAnimationFrame(draw);
+                        else running = false;
                     }
-                    requestAnimationFrame(draw);
+                    function startLoop() { if (!running && loopActive()) { running = true; requestAnimationFrame(draw); } }
+                    // pause the loop when the hero scrolls out of view or the tab is hidden
+                    var heroVisIO = new IntersectionObserver(function (es) {
+                        onScreen = es[0].isIntersecting; startLoop();
+                    }, { threshold: 0 });
+                    heroVisIO.observe(heroHost);
+                    document.addEventListener('visibilitychange', function () {
+                        pageVisible = !document.hidden; startLoop();
+                    });
+                    startLoop();
                 }
 
                 if (!reduce) {
