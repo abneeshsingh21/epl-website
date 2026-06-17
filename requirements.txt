@@ -1,3 +1,4 @@
 # The EPL website is written in EPL itself. The build driver (build.py) renders
-# src/main.epl through the published EPL compiler. Pin to a known-good release.
-epl>=9.7.0
+# src/main.epl through the published EPL compiler. The PyPI distribution is named
+# `eplang` (its import name is `epl`). Pin to a known-good release.
+eplang>=9.7.0

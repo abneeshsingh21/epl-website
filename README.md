@@ -31,7 +31,7 @@ hosted anywhere.
 │   └── main.epl          # the entire website, written in EPL
 ├── build.py              # renders main.epl -> dist/*.html (self-contained)
 ├── epl.toml              # EPL package manifest
-├── requirements.txt      # pins the EPL compiler (epl>=9.7.0)
+├── requirements.txt      # pins the EPL compiler (eplang>=9.7.0)
 └── .github/workflows/
     └── deploy.yml         # build + deploy to GitHub Pages
 ```
