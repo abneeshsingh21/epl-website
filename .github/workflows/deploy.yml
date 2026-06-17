@@ -1,4 +1,4 @@
-name: Build & Deploy
+name: Build & Deploy to Azure
 
 on:
   push:
@@ -7,16 +7,14 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # Allow one concurrent deployment; cancel in-progress runs on new pushes.
 concurrency:
-  group: pages
+  group: azure-swa
   cancel-in-progress: true
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,18 +29,14 @@ jobs:
       - name: Build the static site
         run: python build.py
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      # Upload the prebuilt dist/ straight to the Azure Static Web App
+      # (the SWA that serves https://eplang.me). skip_app_build keeps Oryx
+      # from re-building — we already produced dist/ with the EPL compiler.
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: upload
+          app_location: dist
+          output_location: ""
+          skip_app_build: true
