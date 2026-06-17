@@ -176,17 +176,6 @@ def main():
                 fh.write(html)
             written.append((fname, len(html)))
 
-        # Custom domain for GitHub Pages. Pages reads CNAME from the published
-        # artifact, so it must be (re)written into dist/ on every build.
-        cname = os.path.join(HERE, 'CNAME')
-        if os.path.exists(cname):
-            with open(cname, encoding='utf-8') as fh:
-                domain = fh.read().strip()
-            if domain:
-                with open(os.path.join(out_dir, 'CNAME'), 'w', encoding='utf-8') as fh:
-                    fh.write(domain + '\n')
-                written.append(('CNAME', len(domain)))
-
         # social preview image: copy alongside the HTML if present
         og_src = os.path.join(HERE, 'assets', 'og.png')
         if os.path.exists(og_src):
