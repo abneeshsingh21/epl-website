@@ -1,0 +1,40 @@
+# =============================================================================
+# .gitattributes — EPL Website Repo
+# =============================================================================
+# PURPOSE: Tell GitHub Linguist exactly what this repo is made of.
+#
+# PROBLEM: Linguist was reading build.py + assets/make_og.py and calling the
+#          entire repo "Python 100%", completely ignoring the 141 KB main.epl
+#          source file that IS the website.
+#
+# SOLUTION (3-part):
+#   1. Register .epl as the "EPL" language so Linguist tracks it.
+#   2. Mark Python helper/tooling files as vendored so they are excluded
+#      from the language statistics bar (they are build tooling, not the
+#      primary source of this project).
+#   3. Mark any generated output files as generated so they are excluded too.
+# =============================================================================
+
+# ── EPL source files ──────────────────────────────────────────────────────────
+# linguist-language=EPL   → attribute the file to the EPL language
+# linguist-detectable=true → force Linguist to include it in the stats bar
+#                            (without this, unknown languages are hidden)
+*.epl   linguist-language=EPL
+*.epl   linguist-detectable=true
+
+# ── Python build tooling — exclude from language stats ────────────────────────
+# These files exist only to build / generate / deploy the site.
+# They are NOT the primary source language of this project.
+# linguist-vendored=true removes them from the language bar entirely.
+build.py                    linguist-vendored=true
+assets/make_og.py           linguist-vendored=true
+requirements.txt            linguist-documentation=true
+
+# ── GitHub Actions workflows — already excluded by Linguist by default ────────
+# Explicitly marking them keeps intent clear.
+.github/**                  linguist-vendored=true
+
+# ── Generated / compiled output ───────────────────────────────────────────────
+# If a dist/ or build/ directory is ever committed, exclude it from stats.
+dist/**                     linguist-generated=true
+build/**                    linguist-generated=true
