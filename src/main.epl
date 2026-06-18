@@ -211,6 +211,10 @@ Route "/" shows
                 .stat-label{margin-top:13px;font-size:13.5px;color:var(--paper-dim);line-height:1.45}
                 @media(max-width:780px){.stats{grid-template-columns:1fr 1fr}
                     .stat{border-left:none}.stat:nth-child(even){border-left:1px solid var(--line-soft)}}
+                /* very narrow phones (≤360px): the large tabular stat numbers blow out the
+                   two-column cells. min-width:0 lets the columns hold their track and the
+                   tighter side padding gives the numbers room so the page still fits. */
+                @media(max-width:360px){.stats > *{min-width:0}.stat{padding-left:16px;padding-right:16px}}
 
                 /* manifesto */
                 .manifesto{max-width:1000px}
@@ -219,13 +223,22 @@ Route "/" shows
 
                 /* split + code */
                 .split{display:grid;grid-template-columns:.82fr 1.18fr;gap:clamp(40px,6vw,92px);align-items:center}
+                /* grid children default to min-width:auto, which lets the non-wrapping
+                   code island + long copy blow the column (and the page) wider than the
+                   viewport on mobile. min-width:0 bounds them: text wraps, the code island
+                   scrolls inside its own .code-body (overflow-x:auto) instead of overflowing. */
+                .split > *{min-width:0}
                 .split-p{font-size:1.06rem;line-height:1.7;color:var(--paper-dim);max-width:42ch;margin-top:22px}
                 .split-list{margin-top:30px;display:flex;flex-direction:column;gap:16px}
                 .split-list .li{font-size:14.5px;color:var(--paper-dim);line-height:1.55;padding-left:24px;position:relative}
                 .split-list .li::before{content:'';position:absolute;left:0;top:7px;width:9px;height:9px;border-radius:50%;
                     background:linear-gradient(135deg,var(--c1),var(--c2))}
                 .split-list .li p{display:inline}
-                @media(max-width:820px){.split{grid-template-columns:1fr;gap:38px}}
+                /* On mobile the aurora .glow::before (inset:-20% horizontally) bleeds past
+                   the narrow single-column section and widens the page. overflow-x:clip cuts
+                   the horizontal escape only — the vertical glow bleed and desktop layout are
+                   untouched, and unlike overflow:hidden it creates no scroll container. */
+                @media(max-width:820px){.split{grid-template-columns:1fr;gap:38px}.section{overflow-x:clip}}
 
                 /* aurora glow — soft rainbow bleed behind product cards (Antigravity signature).
                    Must sit on a NON-clipping wrapper (the card itself uses overflow:hidden). */
