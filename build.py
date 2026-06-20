@@ -27,6 +27,7 @@ import subprocess
 import sys
 import time
 import urllib.request
+import shutil
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SOURCE = os.path.join(HERE, 'src', 'main.epl')
@@ -38,6 +39,14 @@ ROUTES = {
     '/privacy': 'privacy.html',
     '/refund': 'refund.html',
 }
+ICON_ASSETS = [
+    'favicon.ico',
+    'favicon-16x16.png',
+    'favicon-32x32.png',
+    'apple-touch-icon.png',
+    'android-chrome-192x192.png',
+    'android-chrome-512x512.png',
+]
 
 # absolute-link -> relative-link rewrites (order matters: longest first)
 LINK_MAP = [
@@ -133,6 +142,50 @@ def inject_meta(html: str) -> str:
     return html
 
 
+def inject_icon_links(html: str) -> str:
+    """Add the standard favicon variants beside EPL's base Favicon output."""
+    tags = (
+        '<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">'
+        '<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">'
+        '<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">'
+        '<link rel="manifest" href="site.webmanifest">'
+    )
+    if 'apple-touch-icon' not in html:
+        html = html.replace('<link rel="icon" type="image/x-icon" href="favicon.ico">',
+                            '<link rel="icon" type="image/x-icon" href="favicon.ico">' + tags,
+                            1)
+    return html
+
+
+def copy_static_assets(out_dir: str):
+    written = []
+    assets_dir = os.path.join(HERE, 'assets')
+
+    for fname in ICON_ASSETS:
+        src = os.path.join(assets_dir, fname)
+        if os.path.exists(src):
+            shutil.copy(src, os.path.join(out_dir, fname))
+            written.append((fname, os.path.getsize(src)))
+
+    manifest = (
+        '{"name":"EPL","short_name":"EPL","icons":['
+        '{"src":"android-chrome-192x192.png","sizes":"192x192","type":"image/png"},'
+        '{"src":"android-chrome-512x512.png","sizes":"512x512","type":"image/png"}'
+        '],"theme_color":"#ffffff","background_color":"#ffffff","display":"standalone"}'
+    )
+    manifest_path = os.path.join(out_dir, 'site.webmanifest')
+    with open(manifest_path, 'w', encoding='utf-8') as fh:
+        fh.write(manifest)
+    written.append(('site.webmanifest', len(manifest)))
+
+    og_src = os.path.join(assets_dir, 'og.png')
+    if os.path.exists(og_src):
+        shutil.copy(og_src, os.path.join(out_dir, 'og.png'))
+        written.append(('og.png', os.path.getsize(og_src)))
+
+    return written
+
+
 def main():
     out_dir = os.path.join(HERE, 'dist')
     if '--out' in sys.argv:
@@ -168,6 +221,7 @@ def main():
         for route, fname in ROUTES.items():
             html = urllib.request.urlopen(base + route, timeout=10).read().decode('utf-8')
             html = rewrite_links(html)
+            html = inject_icon_links(html)
             if route == '/':
                 html = fix_headings(html)
                 html = inject_meta(html)
@@ -176,12 +230,7 @@ def main():
                 fh.write(html)
             written.append((fname, len(html)))
 
-        # social preview image: copy alongside the HTML if present
-        og_src = os.path.join(HERE, 'assets', 'og.png')
-        if os.path.exists(og_src):
-            import shutil
-            shutil.copy(og_src, os.path.join(out_dir, 'og.png'))
-            written.append(('og.png', os.path.getsize(og_src)))
+        written.extend(copy_static_assets(out_dir))
 
         print(f'Static site exported to: {out_dir}')
         for fname, size in written:
