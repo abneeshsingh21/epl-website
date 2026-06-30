@@ -426,6 +426,8 @@ Route "/" shows
                 @media(max-width:520px){.foot-grid{grid-template-columns:1fr}}
 
                 /* native words pull-up */
+                /* keep segments flowing as one paragraph before/without the JS splitter */
+                .pull-words p{display:inline}
                 .native-pull-up{display:inline-block;opacity:0;transform:translateY(18px);
                     transition:opacity .8s var(--ease),transform .8s var(--ease)}
                 .native-pull-up.visible{opacity:1;transform:translateY(0)}
@@ -557,12 +559,12 @@ Route "/" shows
                 Div class "eyebrow reveal"
                     Text "The premise"
                 End
-                Div class "lead reveal dly-1" id "scroll-text"
-                    WordsPullUpMultiStyle
-                        Segment "EPL closes the gap between pseudocode and software. "
-                        Segment "What you mean is what you run — " style "italic-serif"
-                        Segment "no semicolons, no curly braces, no cryptic symbols, and none of the ceremony that keeps people out of programming."
+                Div class "lead reveal dly-1 pull-words" id "scroll-text"
+                    Text "EPL closes the gap between pseudocode and software. "
+                    Span class "italic-serif"
+                        Text "What you mean is what you run — "
                     End
+                    Text "no semicolons, no curly braces, no cryptic symbols, and none of the ceremony that keeps people out of programming."
                 End
             End
         End
@@ -1206,10 +1208,10 @@ Route "/" shows
 
         Note: ── Closing CTA ──────────────────────────────────────────────
         Section class "cta"
-            Div class "cta-h reveal"
-                WordsPullUpMultiStyle
-                    Segment "Programming, "
-                    Segment "in your own words." style "serif"
+            Div class "cta-h reveal pull-words"
+                Text "Programming, "
+                Span class "serif"
+                    Text "in your own words."
                 End
             End
             Div class "cta-sub reveal dly-1"
@@ -1368,6 +1370,35 @@ Route "/" shows
                     });
                 }, { threshold: 0.16, rootMargin: '0px 0px -40px 0px' });
                 document.querySelectorAll('.reveal, .count').forEach(function (el) { io.observe(el); });
+
+                // ── word-level pull-up: split .pull-words into per-word spans ──
+                // Reproduces the old WordsPullUpMultiStyle output in the motion layer.
+                // Source stays semantic (plain text + styled spans), so if this JS never
+                // runs the copy is still fully visible — no opacity:0 trap.
+                Array.prototype.forEach.call(document.querySelectorAll('.pull-words'), function (host) {
+                    var wrap = document.createElement('span');
+                    wrap.className = 'native-words-wrapper';
+                    var n = 0;
+                    function emit(text, cls) {
+                        text.split(/\s+/).forEach(function (w) {
+                            if (!w) return;
+                            if (n > 0) wrap.appendChild(document.createTextNode(' '));
+                            var s = document.createElement('span');
+                            s.className = 'native-pull-up' + (cls ? ' ' + cls : '');
+                            s.style.transitionDelay = (n * 0.1) + 's';
+                            if (reduce) s.classList.add('visible');
+                            s.textContent = w;
+                            wrap.appendChild(s);
+                            n++;
+                        });
+                    }
+                    Array.prototype.forEach.call(host.childNodes, function (node) {
+                        if (node.nodeType === 3) emit(node.textContent, '');
+                        else if (node.nodeType === 1) emit(node.textContent, node.className);
+                    });
+                    host.textContent = '';
+                    host.appendChild(wrap);
+                });
 
                 var wio = new IntersectionObserver(function (entries) {
                     entries.forEach(function (en) { if (en.isIntersecting) en.target.classList.add('visible'); });
