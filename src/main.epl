@@ -550,41 +550,97 @@ Route "/" shows
                 @media(max-width:820px){.pillar{grid-template-columns:50px 1fr;gap:20px;padding:36px 16px}.pillar-meta{display:none}}
 
                 /* audience personas — gradient icon tiles, per-persona accent, pill badges */
-                .audience-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px}
-                .audience-card{--ac:#2EA0FF;background:var(--ink-2);border:1px solid var(--line);border-radius:22px;padding:34px 32px 30px;position:relative;overflow:hidden;isolation:isolate;transition:transform .35s var(--ease),border-color .4s,box-shadow .4s}
+                .audience-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px;perspective:1400px}
+                .audience-card{--ac:#2EA0FF;background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 4%,var(--ink-2)),var(--ink-2));border:1px solid var(--line);border-radius:22px;padding:34px 32px 30px;position:relative;overflow:hidden;isolation:isolate;transform-style:preserve-3d;box-shadow:0 1px 2px rgba(17,17,19,.04),0 12px 30px -22px rgba(17,17,19,.22);transition:transform .45s var(--ease),border-color .4s,box-shadow .45s,background .4s}
                 .audience-card:nth-child(1){--ac:#2EA0FF}
                 .audience-card:nth-child(2){--ac:#7C5CFF}
                 .audience-card:nth-child(3){--ac:#FF5C7A}
                 .audience-card:nth-child(4){--ac:#21C7A8}
-                .audience-card::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(420px circle at var(--mx,-200px) var(--my,-200px), color-mix(in srgb, var(--ac) 15%, transparent), transparent 60%)}
-                .audience-card::after{content:'';position:absolute;left:0;right:0;top:0;height:2px;z-index:1;opacity:0;transition:opacity .4s;background:linear-gradient(90deg, transparent, var(--ac), transparent)}
-                .audience-card:hover{transform:translateY(-5px);border-color:color-mix(in srgb, var(--ac) 44%, var(--line));box-shadow:0 32px 70px -44px var(--ac)}
+                /* pointer-follow accent bloom */
+                .audience-card::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(460px circle at var(--mx,-200px) var(--my,-200px), color-mix(in srgb, var(--ac) 16%, transparent), transparent 62%)}
+                /* top hairline that draws in from center on hover */
+                .audience-card::after{content:'';position:absolute;left:0;right:0;top:0;height:2px;z-index:3;opacity:0;transform:scaleX(.3);transition:opacity .45s,transform .55s var(--ease);background:linear-gradient(90deg, transparent, var(--ac), transparent)}
+                .audience-card:hover{transform:translateY(-6px);border-color:color-mix(in srgb, var(--ac) 46%, var(--line));box-shadow:0 2px 4px rgba(17,17,19,.05),0 40px 80px -46px color-mix(in srgb,var(--ac) 70%,transparent)}
                 .audience-card:hover::before{opacity:1}
-                .audience-card:hover::after{opacity:.9}
-                .audience-icon{width:54px;height:54px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;border-radius:15px;border:1px solid color-mix(in srgb, var(--ac) 30%, var(--line));background:linear-gradient(150deg, color-mix(in srgb, var(--ac) 14%, var(--ink-2)), var(--ink-2));box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
-                .audience-icon svg{width:26px;height:26px;display:block;color:var(--ac);stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;fill:none}
+                .audience-card:hover::after{opacity:.95;transform:scaleX(1)}
+                /* large ghosted persona glyph — editorial corner identity (injected) */
+                .audience-glyph{position:absolute;top:-20px;right:-20px;width:138px;height:138px;z-index:0;pointer-events:none;opacity:.05;color:var(--ac);transform:rotate(-8deg);transition:opacity .5s var(--ease),transform .6s var(--ease)}
+                .audience-glyph svg{width:100%;height:100%;stroke:currentColor;stroke-width:1;fill:none;stroke-linecap:round;stroke-linejoin:round}
+                .audience-card:hover .audience-glyph{opacity:.13;transform:rotate(0deg) scale(1.05)}
+                .audience-icon,.audience-title,.audience-desc,.audience-tag{position:relative;z-index:2}
+                .audience-icon{width:54px;height:54px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;border-radius:15px;overflow:hidden;border:1px solid color-mix(in srgb, var(--ac) 30%, var(--line));background:linear-gradient(150deg, color-mix(in srgb, var(--ac) 16%, var(--ink-2)), var(--ink-2));box-shadow:inset 0 1px 0 rgba(255,255,255,.7);transition:transform .45s var(--ease),border-color .4s,box-shadow .45s}
+                /* sheen sweep across the icon tile on hover */
+                .audience-icon::after{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(120deg,transparent 32%,rgba(255,255,255,.6) 50%,transparent 68%);transform:translateX(-130%);transition:transform .8s var(--ease)}
+                .audience-card:hover .audience-icon{transform:translateY(-2px) scale(1.06);border-color:color-mix(in srgb,var(--ac) 55%,var(--line));box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 14px 28px -14px color-mix(in srgb,var(--ac) 62%,transparent)}
+                .audience-card:hover .audience-icon::after{transform:translateX(130%)}
+                .audience-icon svg{width:26px;height:26px;display:block;position:relative;z-index:1;color:var(--ac);stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;fill:none}
+                /* stroke draw-on when the card scrolls into view */
+                .audience-icon svg *{stroke-dasharray:200;stroke-dashoffset:200;transition:stroke-dashoffset .95s var(--ease) .1s}
+                .audience-card.in .audience-icon svg *{stroke-dashoffset:0}
                 .audience-icon p{display:inline}
-                .audience-title{font-family:var(--display);font-size:1.34rem;font-weight:600;letter-spacing:-.02em;margin-bottom:12px;color:var(--paper)}
+                .audience-title{font-family:var(--display);font-size:1.34rem;font-weight:600;letter-spacing:-.02em;margin-bottom:12px;color:var(--paper);display:inline-block}
+                .audience-title::after{content:'';display:block;height:2px;margin-top:5px;width:100%;border-radius:2px;background:linear-gradient(90deg,var(--ac),transparent);transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease)}
+                .audience-card:hover .audience-title::after{transform:scaleX(1)}
                 .audience-title p{display:inline}
                 .audience-desc{font-size:var(--fs-body-sm);line-height:var(--lh-body-sm);color:var(--paper-dim);max-width:var(--measure-card)}
                 .audience-desc p{display:inline}
-                .audience-tag{display:inline-flex;align-items:center;gap:8px;margin-top:22px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ac);background:color-mix(in srgb, var(--ac) 9%, transparent);border:1px solid color-mix(in srgb, var(--ac) 24%, transparent);padding:7px 13px;border-radius:999px}
-                .audience-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--ac)}
+                .audience-tag{display:inline-flex;align-items:center;gap:8px;margin-top:22px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ac);background:color-mix(in srgb, var(--ac) 9%, transparent);border:1px solid color-mix(in srgb, var(--ac) 24%, transparent);padding:7px 13px;border-radius:999px;transition:background .4s,border-color .4s,box-shadow .4s}
+                .audience-card:hover .audience-tag{background:color-mix(in srgb,var(--ac) 16%,transparent);border-color:color-mix(in srgb,var(--ac) 42%,transparent);box-shadow:0 6px 16px -10px color-mix(in srgb,var(--ac) 70%,transparent)}
+                .audience-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--ac);box-shadow:0 0 0 0 var(--ac);transition:box-shadow .4s}
+                .audience-card:hover .audience-tag::before{box-shadow:0 0 10px 1px color-mix(in srgb,var(--ac) 80%,transparent)}
                 .audience-tag p{display:inline}
-                @media(max-width:760px){.audience-grid{grid-template-columns:1fr}}
+                /* keep the personas 2-up on phones (a single column read as an
+                   unprofessional stack); only fall to one column on very narrow devices.
+                   2-up cards get compact typography so they don't run tall. */
+                @media(max-width:760px){
+                    .audience-grid{gap:12px}
+                    .audience-card{padding:22px 18px 20px}
+                    .audience-icon{width:44px;height:44px;margin-bottom:14px}
+                    .audience-icon svg{width:22px;height:22px}
+                    .audience-title{font-size:1.16rem;margin-bottom:7px}
+                    .audience-desc{font-size:.88rem;line-height:1.48}
+                    .audience-tag{margin-top:13px;padding:6px 11px;font-size:10px}
+                    .audience-glyph{width:104px;height:104px;top:-14px;right:-14px}
+                }
+                @media(max-width:380px){.audience-grid{grid-template-columns:1fr}}
 
-                /* targets bento grid */
-                .targets{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;perspective:1200px}
-                .target{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:28px 24px;
-                    position:relative;overflow:hidden;transform-style:preserve-3d;
-                    transition:transform .25s var(--ease),border-color .4s,box-shadow .4s}
-                .target::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .35s;
-                    background:radial-gradient(320px circle at var(--mx,-200px) var(--my,-200px),var(--accent-soft),transparent 60%)}
-                .target:hover{border-color:rgba(79,70,229,.35);box-shadow:0 24px 60px -30px rgba(79,70,229,.4)}
+                /* targets bento grid — per-output accent spectrum, ordinal watermark, terminal caret */
+                .targets{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;perspective:1200px;counter-reset:tg}
+                .target{--ac:#4F46E5;counter-increment:tg;background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 4%,var(--ink-2)),var(--ink-2));border:1px solid var(--line);border-radius:18px;padding:28px 24px;
+                    position:relative;overflow:hidden;transform-style:preserve-3d;isolation:isolate;
+                    box-shadow:0 1px 2px rgba(17,17,19,.04),0 10px 26px -20px rgba(17,17,19,.2);
+                    transition:transform .25s var(--ease),border-color .4s,box-shadow .45s,background .4s}
+                /* one accent per compile target — the section reads as a spectrum of outputs */
+                .target:nth-child(1){--ac:#2EA0FF}
+                .target:nth-child(2){--ac:#4F46E5}
+                .target:nth-child(3){--ac:#7C5CFF}
+                .target:nth-child(4){--ac:#0EA5A5}
+                .target:nth-child(5){--ac:#F59E0B}
+                .target:nth-child(6){--ac:#8B5CF6}
+                .target:nth-child(7){--ac:#3B82F6}
+                .target:nth-child(8){--ac:#FF5C7A}
+                /* pointer-follow accent bloom */
+                .target::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .4s;
+                    background:radial-gradient(340px circle at var(--mx,-200px) var(--my,-200px),color-mix(in srgb,var(--ac) 15%,transparent),transparent 62%)}
+                /* large ghosted ordinal (01–08) — editorial corner identity, auto-numbered */
+                .target::after{content:counter(tg,decimal-leading-zero);position:absolute;top:6px;right:16px;z-index:0;
+                    font-family:var(--display);font-weight:700;font-size:56px;line-height:1;letter-spacing:-.03em;
+                    color:var(--ac);opacity:.07;pointer-events:none;transition:opacity .5s var(--ease),transform .55s var(--ease)}
+                .target:hover{border-color:color-mix(in srgb,var(--ac) 42%,var(--line));box-shadow:0 2px 4px rgba(17,17,19,.05),0 34px 70px -40px color-mix(in srgb,var(--ac) 68%,transparent)}
                 .target:hover::before{opacity:1}
-                .target-cmd{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent)}
+                .target:hover::after{opacity:.16;transform:translateY(-2px) scale(1.06)}
+                .target-cmd,.target-out,.target-note{position:relative;z-index:1}
+                .target-cmd{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ac);display:flex;align-items:center;transition:transform .4s var(--ease)}
+                /* terminal prompt caret that lights up on hover */
+                .target-cmd::before{content:'$';opacity:.4;margin-right:7px;transition:opacity .4s}
+                .target:hover .target-cmd{transform:translateX(3px)}
+                .target:hover .target-cmd::before{opacity:1}
                 .target-cmd p{display:inline}
-                .target-out{margin-top:16px;font-size:14.5px;color:var(--paper);font-weight:700}
+                .target-out{margin-top:16px;font-size:14.5px;color:var(--paper);font-weight:700;display:inline-block}
+                /* accent underline draws under the output label on hover */
+                .target-out::after{content:'';display:block;height:2px;margin-top:6px;width:100%;border-radius:2px;background:linear-gradient(90deg,var(--ac),transparent);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+                .target:hover .target-out::after{transform:scaleX(1)}
+                .target-out p{display:inline}
                 .target-note{margin-top:6px;font-size:13px;color:var(--paper-dim)}
                 @media(max-width:880px){.targets{grid-template-columns:1fr 1fr}}
                 @media(max-width:360px){.targets{grid-template-columns:1fr}}
@@ -601,11 +657,13 @@ Route "/" shows
                     .pillar{padding:26px 15px;gap:15px}
                     .pillar-title{margin-bottom:9px}
                     .pillar-idx{font-size:19px}
-                    .audience-card{padding:26px 22px 24px}
-                    .audience-icon{width:46px;height:46px;margin-bottom:16px}
-                    .audience-title{font-size:1.24rem;margin-bottom:9px}
-                    .audience-tag{margin-top:16px}
+                    .audience-card{padding:20px 15px 18px}
+                    .audience-icon{width:40px;height:40px;margin-bottom:12px}
+                    .audience-title{font-size:1.1rem;margin-bottom:6px}
+                    .audience-desc{font-size:.86rem;line-height:1.46}
+                    .audience-tag{margin-top:12px}
                     .target{padding:20px 16px}
+                    .target::after{font-size:42px;top:4px;right:12px}
                     .target-cmd{font-size:12px}
                     .target-out{margin-top:10px;font-size:14px}
                     .target-note{font-size:12.5px;line-height:1.5}
@@ -1630,7 +1688,17 @@ Route "/" shows
                     };
                     Object.keys(ICONS).forEach(function (id) {
                         var el = document.getElementById(id);
-                        if (el) el.innerHTML = ICONS[id];
+                        if (!el) return;
+                        el.innerHTML = ICONS[id];
+                        // clone the same glyph as a large, faint editorial corner watermark
+                        var card = el.closest('.audience-card');
+                        if (card && !card.querySelector('.audience-glyph')) {
+                            var g = document.createElement('div');
+                            g.className = 'audience-glyph';
+                            g.setAttribute('aria-hidden', 'true');
+                            g.innerHTML = ICONS[id];
+                            card.appendChild(g);
+                        }
                     });
                 })();
 
@@ -2290,16 +2358,20 @@ Route "/" shows
                 if (!reduce) {
                     // spotlight glow + 3D depth-tilt on cards
                     document.querySelectorAll('.spot').forEach(function (card) {
-                        var tilt = card.classList.contains('target');
+                        var isTarget = card.classList.contains('target');
+                        var isAudience = card.classList.contains('audience-card');
+                        var tilt = isTarget || isAudience;
+                        // audience cards get a gentler, more editorial tilt than the dense target bento
+                        var ax = isTarget ? -7 : -3.5, ay = isTarget ? 9 : 4.5, lift = isTarget ? -4 : -6;
                         card.addEventListener('mousemove', function (e) {
                             var r = card.getBoundingClientRect();
                             var mx = e.clientX - r.left, my = e.clientY - r.top;
                             card.style.setProperty('--mx', mx + 'px');
                             card.style.setProperty('--my', my + 'px');
                             if (tilt) {
-                                var rx = ((my / r.height) - 0.5) * -7;
-                                var ry = ((mx / r.width) - 0.5) * 9;
-                                card.style.transform = 'translateY(-4px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+                                var rx = ((my / r.height) - 0.5) * ax;
+                                var ry = ((mx / r.width) - 0.5) * ay;
+                                card.style.transform = 'translateY(' + lift + 'px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
                             }
                         });
                         if (tilt) card.addEventListener('mouseleave', function () { card.style.transform = ''; });
