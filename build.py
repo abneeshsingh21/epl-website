@@ -142,6 +142,54 @@ def inject_meta(html: str) -> str:
     return html
 
 
+def inject_jsonld(html: str) -> str:
+    """Add JSON-LD structured data (schema.org) to the homepage <head>.
+
+    Only verifiable facts: name, publisher, license, install target, repo.
+    No ratings/reviews — search engines penalize unverifiable claims.
+    """
+    import json
+    data = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            'name': 'EPL — English Programming Language',
+            'alternateName': ['EPL', 'eplang', 'English Programming Language'],
+            'url': SITE_URL,
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            'name': 'EPL (English Programming Language)',
+            'alternateName': 'eplang',
+            'description': (
+                'A programming language with plain-English syntax. '
+                'Runs on a bytecode VM, compiles to native binaries via LLVM, '
+                'and transpiles to Python, JavaScript, Kotlin and more.'
+            ),
+            'url': SITE_URL,
+            'applicationCategory': 'DeveloperApplication',
+            'operatingSystem': 'Windows, macOS, Linux',
+            'license': 'https://www.apache.org/licenses/LICENSE-2.0',
+            'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'USD'},
+            'downloadUrl': 'https://pypi.org/project/eplang/',
+            'installUrl': 'https://pypi.org/project/eplang/',
+            'codeRepository': 'https://github.com/abneeshsingh21/EPL',
+            'author': {'@type': 'Person', 'name': 'Abneesh Singh'},
+            'programmingLanguage': {'@type': 'ComputerLanguage', 'name': 'EPL'},
+        },
+    ]
+    blocks = ''.join(
+        '<script type="application/ld+json">'
+        + json.dumps(d, separators=(',', ':'))
+        + '</script>'
+        for d in data
+    )
+    if 'application/ld+json' not in html:
+        html = html.replace('</head>', blocks + '</head>', 1)
+    return html
+
+
 def inject_icon_links(html: str) -> str:
     """Add the standard favicon variants beside EPL's base Favicon output."""
     tags = (
@@ -182,6 +230,14 @@ def copy_static_assets(out_dir: str):
     if os.path.exists(og_src):
         shutil.copy(og_src, os.path.join(out_dir, 'og.png'))
         written.append(('og.png', os.path.getsize(og_src)))
+
+    # crawler/discovery files: robots.txt + sitemap.xml (search engines),
+    # llms.txt (AI assistants — mirrors the one in the main EPL repo)
+    for fname in ('robots.txt', 'sitemap.xml', 'llms.txt'):
+        src = os.path.join(assets_dir, fname)
+        if os.path.exists(src):
+            shutil.copy(src, os.path.join(out_dir, fname))
+            written.append((fname, os.path.getsize(src)))
 
     return written
 
@@ -225,6 +281,7 @@ def main():
             if route == '/':
                 html = fix_headings(html)
                 html = inject_meta(html)
+                html = inject_jsonld(html)
             path = os.path.join(out_dir, fname)
             with open(path, 'w', encoding='utf-8') as fh:
                 fh.write(html)
