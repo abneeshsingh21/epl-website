@@ -1656,7 +1656,7 @@ Route "/" shows
                     Link "Terms" to "/terms"
                     Link "Privacy" to "/privacy"
                     Link "Refund" to "/refund"
-                    Link "Contact" to "mailto:singhabneesh250@gmail.com"
+                    Link "Contact" to "mailto:contact@eplang.me"
                 End
             End
             Div class "foot-giant"
@@ -2617,7 +2617,7 @@ Route "/terms" shows
                 Text "12. Contact"
             End
             Div class "box"
-                Text "Questions about these Terms? Email us at singhabneesh250@gmail.com."
+                Text "Questions about these Terms? Email us at contact@eplang.me."
             End
 
         End
@@ -2629,7 +2629,7 @@ Route "/terms" shows
                 Link "Terms" to "/terms"
                 Link "Privacy" to "/privacy"
                 Link "Refund" to "/refund"
-                Link "Contact" to "mailto:singhabneesh250@gmail.com"
+                Link "Contact" to "mailto:contact@eplang.me"
             End
         End
     End
@@ -2768,7 +2768,7 @@ Route "/privacy" shows
                 Text "10. Contact"
             End
             Div class "box"
-                Text "For privacy questions or data requests, email singhabneesh250@gmail.com."
+                Text "For privacy questions or data requests, email contact@eplang.me."
             End
 
         End
@@ -2780,7 +2780,7 @@ Route "/privacy" shows
                 Link "Terms" to "/terms"
                 Link "Privacy" to "/privacy"
                 Link "Refund" to "/refund"
-                Link "Contact" to "mailto:singhabneesh250@gmail.com"
+                Link "Contact" to "mailto:contact@eplang.me"
             End
         End
     End
@@ -2893,7 +2893,7 @@ Route "/refund" shows
             Div class "lh2"
                 Text "4. How to request a refund"
             End
-            Text "Email singhabneesh250@gmail.com with the email address used for payment, the transaction or order ID, the date, the amount, and the reason for your request. We may ask for additional information to verify the transaction."
+            Text "Email contact@eplang.me with the email address used for payment, the transaction or order ID, the date, the amount, and the reason for your request. We may ask for additional information to verify the transaction."
             Div class "lh2"
                 Text "5. Processing of refunds"
             End
@@ -2906,7 +2906,7 @@ Route "/refund" shows
                 Text "7. Contact"
             End
             Div class "box"
-                Text "For refund or cancellation requests, email singhabneesh250@gmail.com."
+                Text "For refund or cancellation requests, email contact@eplang.me."
             End
 
         End
@@ -2918,7 +2918,7 @@ Route "/refund" shows
                 Link "Terms" to "/terms"
                 Link "Privacy" to "/privacy"
                 Link "Refund" to "/refund"
-                Link "Contact" to "mailto:singhabneesh250@gmail.com"
+                Link "Contact" to "mailto:contact@eplang.me"
             End
         End
     End
