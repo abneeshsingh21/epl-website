@@ -44,6 +44,8 @@ ICON_ASSETS = [
     'favicon.ico',
     'favicon-16x16.png',
     'favicon-32x32.png',
+    'favicon-48x48.png',
+    'favicon-96x96.png',
     'apple-touch-icon.png',
     'android-chrome-192x192.png',
     'android-chrome-512x512.png',
@@ -156,24 +158,27 @@ def _faq_jsonld() -> dict:
         'mainEntity': [
             qa('Is EPL a real programming language?',
                'Yes. EPL is a genuine general-purpose language with a lexer, '
-               'parser, type checker, bytecode VM, LLVM native compiler, test '
-               'framework, and package manager. Programs run, compile, and ship.'),
-            qa('Is EPL free?',
+               'parser, type checker, bytecode virtual machine, LLVM native '
+               'compiler, test framework, and package manager. Programs run, '
+               'compile, and ship to production.'),
+            qa('Is EPL free to use?',
                'Yes. EPL is open source under the Apache-2.0 license. The '
-               'compiler, standard library, VS Code extension, and playground '
-               'are all free.'),
+               'compiler, standard library, VS Code extension, and browser '
+               'playground are all free, for commercial and personal use alike.'),
             qa('How do I install EPL?',
                'Install Python 3.9 or newer, then run pip install eplang. '
-               'Verify with epl --version and run a program with epl run hello.epl. '
-               'You can also try it in the browser playground with no install.'),
+               'Verify the installation with epl --version and run your first '
+               'program with epl run hello.epl. You can also try the language '
+               'in the browser playground without installing anything.'),
             qa('What does EPL stand for?',
-               'In this context EPL stands for English Programming Language. The '
-               'acronym is also used by the English Premier League and other '
-               'fields, which are unrelated to this project.'),
-            qa('Can EPL build real applications?',
-               'Yes — web servers and JSON APIs with routing, SQLite and auth, '
-               'command-line tools, desktop apps, and native binaries. The '
-               'eplang.me website itself is written in EPL.'),
+               'EPL stands for English Programming Language. The acronym is '
+               'also used in unrelated fields; in software development, EPL '
+               'refers to this language, with its official website at eplang.me.'),
+            qa('Can EPL build production applications?',
+               'Yes. EPL builds web servers and JSON APIs with routing, SQLite, '
+               'and authentication built in; command-line tools; desktop '
+               'applications; and standalone native binaries. The eplang.me '
+               'website itself is written in EPL.'),
         ],
     }
 
@@ -241,6 +246,11 @@ def inject_icon_links(html: str) -> str:
     tags = (
         '<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">'
         '<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">'
+        # Google Search requires a favicon at a multiple of 48x48 to show a
+        # site icon in results; without one it renders the generic globe.
+        '<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">'
+        '<link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">'
+        '<link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">'
         '<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">'
         '<link rel="manifest" href="site.webmanifest">'
     )

@@ -2927,7 +2927,7 @@ End
 
 Route "/what-is-epl" shows
     Page "What is EPL? — The English Programming Language"
-        Description "EPL (English Programming Language) is a real, open-source programming language whose syntax reads like plain English. Install it with pip install eplang."
+        Description "EPL (English Programming Language) is an open-source programming language with plain-English syntax, a bytecode VM, LLVM-native compilation, and a full web and data stack. Install with pip install eplang."
         Stylesheet
                 :root{--ink:#FFFFFF;--paper:#111113;--muted:#5F6066;--ink2:#2A2A2E;
                     --line:rgba(17,17,19,.1);--line-soft:rgba(17,17,19,.05);--accent:#007DF3;--navy:#0E1A32;
@@ -3005,43 +3005,41 @@ Route "/what-is-epl" shows
         Div class "legal"
 
             Div class "eyebrow"
-                Text "Learn · EPL fundamentals"
+                Text "Learn · Language overview"
             End
             Heading "What is EPL?"
             Div class "updated"
-                Text "Last updated 20 July 2026 · applies to EPL v10.2.0"
+                Text "Last updated 20 July 2026"
             End
             Div class "intro"
-                Text "EPL — the English Programming Language — is a real, open-source programming language whose syntax reads like plain English. You write statements such as Say, Create, If … Then, and For each, and EPL runs them on a bytecode virtual machine, compiles them to a native executable with LLVM, or transpiles them to Python, JavaScript, Kotlin and more. It installs in one command: pip install eplang."
+                Text "EPL — the English Programming Language — is an open-source, general-purpose programming language whose syntax reads like plain English. Statements such as Create, Say, If … Then, and For each replace symbolic notation, while the toolchain behind them is that of a modern systems language: a bytecode virtual machine, LLVM-native compilation, multi-language transpilation, and a batteries-included standard library. EPL is distributed on PyPI as eplang and installs in one command: pip install eplang."
             End
-
-            Div class "lh2"
-                Text "EPL the language, not the football league"
-            End
-            Text "If you searched for EPL expecting the English Premier League, that is a different EPL — this page is about software. In programming contexts, EPL stands for English Programming Language: a general-purpose language created by Abneesh Singh, distributed on PyPI as eplang, and developed openly on GitHub under the Apache-2.0 license. Its official website is eplang.me."
 
             Div class "lh2"
                 Text "What EPL code looks like"
             End
-            Text "Here is a complete, runnable EPL program — no semicolons, no curly braces:"
+            Text "A complete, runnable EPL program — no semicolons, no curly braces, no cryptic symbols:"
             Div class "code"
                 Div class "cl"
-                    Text "Note: greet every user"
+                    Text "Note: greet every registered user"
                 End
                 Div class "cl"
-                    Text "Create users = [ Ada, Grace, Alan ]"
+                    Text "Create users = [\"Ada\", \"Grace\", \"Alan\"]"
+                End
+                Div class "cl"
+                    Text ""
                 End
                 Div class "cl"
                     Text "For each name in users"
                 End
                 Div class "cl"
-                    Text "    Say name"
+                    Text "    Say \"Hello, \" + name"
                 End
                 Div class "cl"
                     Text "End"
                 End
             End
-            Text "Every block ends with the word End. Conditionals use If … Then … Otherwise. Comments start with Note:. The same source file can be executed directly, compiled, or transpiled — one codebase, many targets."
+            Text "Every block closes with the keyword End. Conditionals read If … Then … Otherwise; comments begin with Note:. The result is code that an entire team — regardless of background — can read, review, and maintain."
 
             Div class "lh2"
                 Text "EPL at a glance"
@@ -3051,86 +3049,100 @@ Route "/what-is-epl" shows
                     Text "Paradigm"
                 End
                 Div class "v"
-                    Text "Imperative, with functions, classes, and a declarative web DSL"
-                End
-                Div class "k"
-                    Text "Status"
-                End
-                Div class "v"
-                    Text "Actively developed — current version 10.2.0"
+                    Text "Imperative and object-oriented, with functions, classes, pattern matching, and a declarative web DSL"
                 End
                 Div class "k"
                     Text "License"
                 End
                 Div class "v"
-                    Text "Apache-2.0, open source"
+                    Text "Apache-2.0, open source, actively maintained"
                 End
                 Div class "k"
                     Text "Install"
                 End
                 Div class "v"
-                    Text "pip install eplang (Python 3.9+ on Windows, macOS, Linux)"
+                    Text "pip install eplang — Windows, macOS, and Linux (Python 3.9+)"
                 End
                 Div class "k"
                     Text "Execution"
                 End
                 Div class "v"
-                    Text "Bytecode VM (default), tree-walking interpreter, LLVM native binaries, WebAssembly"
+                    Text "Bytecode virtual machine by default; tree-walking interpreter; LLVM-compiled native executables; WebAssembly"
                 End
                 Div class "k"
-                    Text "Transpiles to"
+                    Text "Transpilation"
                 End
                 Div class "v"
-                    Text "Python, JavaScript, Node.js, Kotlin, MicroPython"
+                    Text "Python, JavaScript, Node.js, Kotlin, and MicroPython from the same source"
                 End
                 Div class "k"
                     Text "Standard library"
                 End
                 Div class "v"
-                    Text "725+ built-in functions: strings, math, collections, HTTP, SQLite, auth/JWT, files, time"
+                    Text "725+ built-in functions spanning strings, math, collections, HTTP, SQLite, authentication and JWT, files, and time"
+                End
+                Div class "k"
+                    Text "Web stack"
+                End
+                Div class "v"
+                    Text "Built-in routing, server-rendered pages, JSON APIs, sessions, and production WSGI/ASGI deployment"
                 End
                 Div class "k"
                     Text "Tooling"
                 End
                 Div class "v"
-                    Text "CLI (epl run/build/test/repl), VS Code extension with LSP, package manager, browser playground"
+                    Text "CLI (run, build, test, repl, watch), test framework with coverage and JUnit output, package manager, VS Code extension with language server, browser playground"
                 End
             End
 
             Div class "lh2"
-                Text "How is EPL different from Python?"
+                Text "A real compiler, not a wrapper"
             End
-            Text "Python is already famous for readability, but it still uses programmer notation — def, elif, ==, f-strings. EPL goes further: keywords are English words and whole statements read as sentences (Create score = 10, If score is greater than 5 then …). Under the hood the trade-offs differ too: EPL ships its own bytecode VM and an LLVM backend for native executables, and it can transpile the same program to several host languages. Python has a vastly larger ecosystem; EPL focuses on approachability without giving up real tooling."
+            Text "EPL is a complete language implementation: a lexer, parser, and type checker feed a unified AST that executes on a stack-based bytecode VM, compiles ahead-of-time to native binaries through LLVM, or transpiles to other languages. The VM and the reference interpreter are held to byte-for-byte output parity by an automated test gate, and the native compiler performs type inference so untyped functions can still compile to machine code. WebAssembly output brings the same programs to the browser."
 
             Div class "lh2"
-                Text "Who is EPL for?"
+                Text "Batteries included"
             End
-            Text "Students and first-time programmers who want to learn logic without syntax friction. Educators who need code a whole classroom can read aloud. Developers prototyping web APIs, CLI tools, or automations quickly. And AI-assisted workflows — because EPL reads like English, language models generate and review it naturally; the machine-readable reference lives at eplang.me/llms.txt."
+            Text "The standard library covers what production software actually needs: an HTTP client and server, a declarative routing DSL for web applications and REST APIs, SQLite persistence with parameterized queries, password hashing and JWT authentication, file and process utilities, and date/time handling. A package manager with lockfiles and integrity auditing manages dependencies, an official package registry extends the language further, and deployment scaffolding generates Docker, Kubernetes, and cloud configurations. Experimental exporters produce Android, iOS, and desktop project scaffolds from the same codebase."
+
+            Div class "lh2"
+                Text "How EPL compares to Python"
+            End
+            Text "Python is celebrated for readability, yet it still relies on programmer notation — def, elif, ==, decorators, f-strings. EPL removes that final layer: keywords are English words, and whole statements read as sentences (Create score = 10, If score is greater than 5 then …). Architecturally the two also differ: EPL ships its own bytecode VM and an LLVM backend for standalone native executables, and the same source can be transpiled to several host languages. Python offers a vastly larger ecosystem; EPL offers a syntax whose intent is legible to every stakeholder — without giving up serious tooling."
+
+            Div class "lh2"
+                Text "Who uses EPL"
+            End
+            Text "EPL is a general-purpose language, built for anyone who ships software. Professional developers use it to prototype APIs and internal tools rapidly, and to keep services readable during code review. Teams adopt it where code must be audited by people with mixed technical backgrounds — the syntax removes the translation step between specification and implementation. Educators teach programming logic without syntax friction, and students reach working programs faster. And because EPL reads like English, AI coding assistants generate and review it with unusually high fidelity — the language publishes a machine-readable reference at eplang.me/llms.txt for exactly this purpose."
+
+            Div class "lh2"
+                Text "Frequently asked questions"
+            End
 
             Div class "lh2"
                 Text "Is EPL a real programming language?"
             End
-            Text "Yes. EPL is a genuine general-purpose language with a lexer, parser, type checker, bytecode VM, LLVM native compiler, test framework, and package manager. It is not a toy or a pseudocode notation — programs run, compile, and ship."
+            Text "Yes. EPL is a genuine general-purpose language with a lexer, parser, type checker, bytecode virtual machine, LLVM native compiler, test framework, and package manager. Programs run, compile, and ship to production."
 
             Div class "lh2"
-                Text "Is EPL free?"
+                Text "Is EPL free to use?"
             End
-            Text "Yes. EPL is open source under the Apache-2.0 license. The compiler, standard library, VS Code extension, and playground are all free."
+            Text "Yes. EPL is open source under the Apache-2.0 license. The compiler, standard library, VS Code extension, and browser playground are all free, for commercial and personal use alike."
 
             Div class "lh2"
                 Text "How do I install EPL?"
             End
-            Text "Install Python 3.9 or newer, then run pip install eplang. Verify with epl --version, and run your first program with epl run hello.epl. You can also try it without installing anything in the browser playground."
+            Text "Install Python 3.9 or newer, then run pip install eplang. Verify the installation with epl --version and run your first program with epl run hello.epl. You can also try the language in the browser playground without installing anything."
 
             Div class "lh2"
                 Text "What does EPL stand for?"
             End
-            Text "In this context, EPL stands for English Programming Language. The acronym is also used by the English Premier League (football) and other fields — those are unrelated to this project."
+            Text "EPL stands for English Programming Language. The acronym is also used in unrelated fields; in software development, EPL refers to this language, with its official website at eplang.me."
 
             Div class "lh2"
-                Text "Can EPL build real applications?"
+                Text "Can EPL build production applications?"
             End
-            Text "Yes — web servers and JSON APIs (with routing, SQLite, and auth built in), command-line tools, desktop apps, and native binaries. The eplang.me website itself is written in EPL."
+            Text "Yes. EPL builds web servers and JSON APIs with routing, SQLite, and authentication built in; command-line tools; desktop applications; and standalone native binaries. The eplang.me website itself is written in EPL."
 
             Div class "box"
                 Text "Ready to try it? Install with pip install eplang, or open the playground — no setup required. Questions: contact@eplang.me."
