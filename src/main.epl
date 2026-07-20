@@ -7,7 +7,7 @@ Note: Accessibility: focus-visible + full prefers-reduced-motion fallback. Page 
 Create WebApp called epl_site
 
 Head
-    Description "EPL is a real programming language with plain-English syntax: a bytecode VM, LLVM-native compilation, eight targets, and 725+ built-ins."
+    Description "EPL (English Programming Language) is a real, open-source programming language with plain-English syntax. Install with pip install eplang. Bytecode VM, LLVM-native compilation, and 725+ built-ins."
     ThemeColor "#FFFFFF"
     Meta "color-scheme" "light"
     Meta "robots" "index,follow"
@@ -1635,6 +1635,7 @@ Route "/" shows
                 End
                 Div class "foot-col"
                     Heading "Resources"
+                    Link "What is EPL?" to "/what-is-epl"
                     Link "VS Code extension" to "https://marketplace.visualstudio.com/publishers/epl-lang"
                     Link "Getting started" to "https://abneeshsingh21.github.io/EPL/"
                     Link "Architecture" to "https://github.com/abneeshsingh21/EPL"
@@ -2918,6 +2919,232 @@ Route "/refund" shows
                 Link "Terms" to "/terms"
                 Link "Privacy" to "/privacy"
                 Link "Refund" to "/refund"
+                Link "Contact" to "mailto:contact@eplang.me"
+            End
+        End
+    End
+End
+
+Route "/what-is-epl" shows
+    Page "What is EPL? — The English Programming Language"
+        Description "EPL (English Programming Language) is a real, open-source programming language whose syntax reads like plain English. Install it with pip install eplang."
+        Stylesheet
+                :root{--ink:#FFFFFF;--paper:#111113;--muted:#5F6066;--ink2:#2A2A2E;
+                    --line:rgba(17,17,19,.1);--line-soft:rgba(17,17,19,.05);--accent:#007DF3;--navy:#0E1A32;
+                    --gut:clamp(20px,5vw,44px);--logo:url("data:image/png;base64,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")}
+                *{box-sizing:border-box}
+                html{scroll-behavior:smooth}
+                body{margin:0;background:var(--ink);color:var(--paper);line-height:1.66;
+                    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+                    -webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+                .container{max-width:100%!important;margin:0!important;padding:0!important;width:100%}
+                p{margin:0}
+                a{color:var(--accent);text-decoration:none}
+                a:hover{text-decoration:underline}
+                ::selection{background:var(--paper);color:#fff}
+                .lnav{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;
+                    padding:16px var(--gut);border-bottom:1px solid var(--line-soft);
+                    background:rgba(255,255,255,.82);backdrop-filter:saturate(160%) blur(14px)}
+                .lbrand a{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:20px;
+                    letter-spacing:-.03em;color:var(--paper)}
+                .lbrand a:hover{text-decoration:none}
+                .lbrand a::before{content:'';width:26px;height:28px;background:var(--logo) center/contain no-repeat}
+                .lnav-right{display:flex;align-items:center;gap:22px}
+                .lnav-right > a{font-size:14px;font-weight:500;color:var(--muted)}
+                .lnav-right > a:hover{color:var(--paper);text-decoration:none}
+                .lnav-cta-wrap a{color:#fff;background:var(--paper);padding:9px 18px;border-radius:999px;font-weight:600;font-size:14px}
+                .lnav-cta-wrap a:hover{background:var(--navy);text-decoration:none}
+                .legal{max-width:760px;margin:0 auto;padding:clamp(46px,7vw,90px) var(--gut) 40px}
+                .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;
+                    letter-spacing:.28em;text-transform:uppercase;color:var(--accent)}
+                .legal h1{font-size:clamp(2.1rem,5vw,3.2rem);font-weight:800;letter-spacing:-.035em;
+                    line-height:1.04;margin:14px 0 8px;color:var(--paper)}
+                .updated{color:var(--muted);font-size:14px;margin-bottom:18px}
+                .intro{font-size:1.12rem;line-height:1.62;color:var(--ink2);margin-bottom:8px}
+                .lh2{font-size:1.28rem;font-weight:700;letter-spacing:-.02em;margin:40px 0 12px;color:var(--paper)}
+                .legal p{color:var(--ink2);font-size:1.02rem;margin:0 0 14px}
+                .legal .ul{margin:4px 0 16px;display:flex;flex-direction:column;gap:9px}
+                .legal .li{position:relative;padding-left:22px;color:var(--ink2);font-size:1.02rem;line-height:1.6}
+                .legal .li::before{content:'';position:absolute;left:3px;top:.62em;width:7px;height:7px;
+                    border-radius:50%;background:var(--accent)}
+                .legal .li p{display:inline}
+                .legal strong{color:var(--paper);font-weight:600}
+                .box{background:#F6F6F7;border:1px solid var(--line);border-radius:14px;
+                    padding:18px 22px;margin:8px 0 14px;color:var(--muted);font-size:.97rem}
+                .box a{font-weight:600}
+                .lfoot{border-top:1px solid var(--line);margin-top:24px;padding:38px var(--gut);
+                    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+                    max-width:880px;margin-left:auto;margin-right:auto;color:var(--muted);font-size:13px}
+                .lfoot a{color:var(--muted)}
+                .lfoot-links{display:flex;gap:20px;flex-wrap:wrap}
+                .lfoot p{display:inline}
+                @media(max-width:560px){.lnav-right > a{display:none}}
+                
+                .code{background:#0B0B0D;border-radius:14px;padding:20px 24px;margin:10px 0 18px;
+                    font-family:'JetBrains Mono',monospace;font-size:.92rem;line-height:1.7;overflow-x:auto}
+                .code .cl{color:#F2F2F4;white-space:pre}
+                .kv{display:grid;grid-template-columns:190px 1fr;gap:6px 18px;margin:10px 0 18px}
+                .kv .k{color:var(--muted);font-size:.95rem}
+                .kv .v{color:var(--ink2);font-size:.95rem}
+                @media(max-width:560px){.kv{grid-template-columns:1fr}}
+
+        End
+        
+        Div class "lnav"
+            Div class "lbrand"
+                Link "EPL" to "/"
+            End
+            Div class "lnav-right"
+                Link "Docs" to "https://abneeshsingh21.github.io/EPL/"
+                Link "Back to site" to "/"
+                Div class "lnav-cta-wrap"
+                    Link "Install" to "/#install"
+                End
+            End
+        End
+        Div class "legal"
+
+            Div class "eyebrow"
+                Text "Learn · EPL fundamentals"
+            End
+            Heading "What is EPL?"
+            Div class "updated"
+                Text "Last updated 20 July 2026 · applies to EPL v10.2.0"
+            End
+            Div class "intro"
+                Text "EPL — the English Programming Language — is a real, open-source programming language whose syntax reads like plain English. You write statements such as Say, Create, If … Then, and For each, and EPL runs them on a bytecode virtual machine, compiles them to a native executable with LLVM, or transpiles them to Python, JavaScript, Kotlin and more. It installs in one command: pip install eplang."
+            End
+
+            Div class "lh2"
+                Text "EPL the language, not the football league"
+            End
+            Text "If you searched for EPL expecting the English Premier League, that is a different EPL — this page is about software. In programming contexts, EPL stands for English Programming Language: a general-purpose language created by Abneesh Singh, distributed on PyPI as eplang, and developed openly on GitHub under the Apache-2.0 license. Its official website is eplang.me."
+
+            Div class "lh2"
+                Text "What EPL code looks like"
+            End
+            Text "Here is a complete, runnable EPL program — no semicolons, no curly braces:"
+            Div class "code"
+                Div class "cl"
+                    Text "Note: greet every user"
+                End
+                Div class "cl"
+                    Text "Create users = [ Ada, Grace, Alan ]"
+                End
+                Div class "cl"
+                    Text "For each name in users"
+                End
+                Div class "cl"
+                    Text "    Say name"
+                End
+                Div class "cl"
+                    Text "End"
+                End
+            End
+            Text "Every block ends with the word End. Conditionals use If … Then … Otherwise. Comments start with Note:. The same source file can be executed directly, compiled, or transpiled — one codebase, many targets."
+
+            Div class "lh2"
+                Text "EPL at a glance"
+            End
+            Div class "kv"
+                Div class "k"
+                    Text "Paradigm"
+                End
+                Div class "v"
+                    Text "Imperative, with functions, classes, and a declarative web DSL"
+                End
+                Div class "k"
+                    Text "Status"
+                End
+                Div class "v"
+                    Text "Actively developed — current version 10.2.0"
+                End
+                Div class "k"
+                    Text "License"
+                End
+                Div class "v"
+                    Text "Apache-2.0, open source"
+                End
+                Div class "k"
+                    Text "Install"
+                End
+                Div class "v"
+                    Text "pip install eplang (Python 3.9+ on Windows, macOS, Linux)"
+                End
+                Div class "k"
+                    Text "Execution"
+                End
+                Div class "v"
+                    Text "Bytecode VM (default), tree-walking interpreter, LLVM native binaries, WebAssembly"
+                End
+                Div class "k"
+                    Text "Transpiles to"
+                End
+                Div class "v"
+                    Text "Python, JavaScript, Node.js, Kotlin, MicroPython"
+                End
+                Div class "k"
+                    Text "Standard library"
+                End
+                Div class "v"
+                    Text "725+ built-in functions: strings, math, collections, HTTP, SQLite, auth/JWT, files, time"
+                End
+                Div class "k"
+                    Text "Tooling"
+                End
+                Div class "v"
+                    Text "CLI (epl run/build/test/repl), VS Code extension with LSP, package manager, browser playground"
+                End
+            End
+
+            Div class "lh2"
+                Text "How is EPL different from Python?"
+            End
+            Text "Python is already famous for readability, but it still uses programmer notation — def, elif, ==, f-strings. EPL goes further: keywords are English words and whole statements read as sentences (Create score = 10, If score is greater than 5 then …). Under the hood the trade-offs differ too: EPL ships its own bytecode VM and an LLVM backend for native executables, and it can transpile the same program to several host languages. Python has a vastly larger ecosystem; EPL focuses on approachability without giving up real tooling."
+
+            Div class "lh2"
+                Text "Who is EPL for?"
+            End
+            Text "Students and first-time programmers who want to learn logic without syntax friction. Educators who need code a whole classroom can read aloud. Developers prototyping web APIs, CLI tools, or automations quickly. And AI-assisted workflows — because EPL reads like English, language models generate and review it naturally; the machine-readable reference lives at eplang.me/llms.txt."
+
+            Div class "lh2"
+                Text "Is EPL a real programming language?"
+            End
+            Text "Yes. EPL is a genuine general-purpose language with a lexer, parser, type checker, bytecode VM, LLVM native compiler, test framework, and package manager. It is not a toy or a pseudocode notation — programs run, compile, and ship."
+
+            Div class "lh2"
+                Text "Is EPL free?"
+            End
+            Text "Yes. EPL is open source under the Apache-2.0 license. The compiler, standard library, VS Code extension, and playground are all free."
+
+            Div class "lh2"
+                Text "How do I install EPL?"
+            End
+            Text "Install Python 3.9 or newer, then run pip install eplang. Verify with epl --version, and run your first program with epl run hello.epl. You can also try it without installing anything in the browser playground."
+
+            Div class "lh2"
+                Text "What does EPL stand for?"
+            End
+            Text "In this context, EPL stands for English Programming Language. The acronym is also used by the English Premier League (football) and other fields — those are unrelated to this project."
+
+            Div class "lh2"
+                Text "Can EPL build real applications?"
+            End
+            Text "Yes — web servers and JSON APIs (with routing, SQLite, and auth built in), command-line tools, desktop apps, and native binaries. The eplang.me website itself is written in EPL."
+
+            Div class "box"
+                Text "Ready to try it? Install with pip install eplang, or open the playground — no setup required. Questions: contact@eplang.me."
+            End
+
+        End
+        Div class "lfoot"
+            Span class "c"
+                Text "© 2024–2026 Abneesh Singh · EPL · Apache-2.0"
+            End
+            Div class "lfoot-links"
+                Link "Home" to "/"
+                Link "Terms" to "/terms"
+                Link "Privacy" to "/privacy"
                 Link "Contact" to "mailto:contact@eplang.me"
             End
         End

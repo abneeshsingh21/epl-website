@@ -5,11 +5,12 @@
 ## Documentation
 
 - [Official Website](https://eplang.me/): Homepage with live playground and install guide
+- [What is EPL?](https://eplang.me/what-is-epl.html): Overview, FAQ, and how EPL compares to Python
 - [Syntax Reference](https://github.com/abneeshsingh21/EPL/blob/main/GRAMMAR.md): Formal grammar specification
 - [Examples](https://github.com/abneeshsingh21/EPL/tree/main/examples): 50+ working programs (`examples/apps/` has full apps)
 - [README](https://github.com/abneeshsingh21/EPL/blob/main/README.md): Getting started guide
 - [Changelog](https://github.com/abneeshsingh21/EPL/blob/main/CHANGELOG.md): Version history
-- [Full Reference for LLMs](https://github.com/abneeshsingh21/EPL/blob/main/llms-full.txt): Complete syntax + examples for AI consumption
+- [Full Reference for LLMs](https://eplang.me/llms-full.txt): Complete syntax + examples for AI consumption
 
 ## Key Syntax Rules
 

@@ -35,6 +35,7 @@ SOURCE = os.path.join(HERE, 'src', 'main.epl')
 # route path -> output filename
 ROUTES = {
     '/': 'index.html',
+    '/what-is-epl': 'what-is-epl.html',
     '/terms': 'terms.html',
     '/privacy': 'privacy.html',
     '/refund': 'refund.html',
@@ -50,6 +51,7 @@ ICON_ASSETS = [
 
 # absolute-link -> relative-link rewrites (order matters: longest first)
 LINK_MAP = [
+    ('href="/what-is-epl"', 'href="what-is-epl.html"'),
     ('href="/terms"', 'href="terms.html"'),
     ('href="/privacy"', 'href="privacy.html"'),
     ('href="/refund"', 'href="refund.html"'),
@@ -142,13 +144,49 @@ def inject_meta(html: str) -> str:
     return html
 
 
-def inject_jsonld(html: str) -> str:
-    """Add JSON-LD structured data (schema.org) to the homepage <head>.
+def _faq_jsonld() -> dict:
+    """FAQPage schema for /what-is-epl. Q&A text mirrors the visible page
+    (Google requires the on-page content to match the markup)."""
+    def qa(q, a):
+        return {'@type': 'Question', 'name': q,
+                'acceptedAnswer': {'@type': 'Answer', 'text': a}}
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': [
+            qa('Is EPL a real programming language?',
+               'Yes. EPL is a genuine general-purpose language with a lexer, '
+               'parser, type checker, bytecode VM, LLVM native compiler, test '
+               'framework, and package manager. Programs run, compile, and ship.'),
+            qa('Is EPL free?',
+               'Yes. EPL is open source under the Apache-2.0 license. The '
+               'compiler, standard library, VS Code extension, and playground '
+               'are all free.'),
+            qa('How do I install EPL?',
+               'Install Python 3.9 or newer, then run pip install eplang. '
+               'Verify with epl --version and run a program with epl run hello.epl. '
+               'You can also try it in the browser playground with no install.'),
+            qa('What does EPL stand for?',
+               'In this context EPL stands for English Programming Language. The '
+               'acronym is also used by the English Premier League and other '
+               'fields, which are unrelated to this project.'),
+            qa('Can EPL build real applications?',
+               'Yes — web servers and JSON APIs with routing, SQLite and auth, '
+               'command-line tools, desktop apps, and native binaries. The '
+               'eplang.me website itself is written in EPL.'),
+        ],
+    }
+
+
+def inject_jsonld(html: str, route: str = '/') -> str:
+    """Add JSON-LD structured data (schema.org) to a page <head>.
 
     Only verifiable facts: name, publisher, license, install target, repo.
     No ratings/reviews — search engines penalize unverifiable claims.
+    The /what-is-epl page also gets a FAQPage block matching its visible Q&A.
     """
     import json
+    page_url = SITE_URL if route == '/' else SITE_URL + route.lstrip('/')
     data = [
         {
             '@context': 'https://schema.org',
@@ -156,6 +194,12 @@ def inject_jsonld(html: str) -> str:
             'name': 'EPL — English Programming Language',
             'alternateName': ['EPL', 'eplang', 'English Programming Language'],
             'url': SITE_URL,
+        } if route == '/' else {
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            'name': 'What is EPL? — The English Programming Language',
+            'url': page_url,
+            'isPartOf': {'@type': 'WebSite', 'name': 'EPL', 'url': SITE_URL},
         },
         {
             '@context': 'https://schema.org',
@@ -179,6 +223,8 @@ def inject_jsonld(html: str) -> str:
             'programmingLanguage': {'@type': 'ComputerLanguage', 'name': 'EPL'},
         },
     ]
+    if route == '/what-is-epl':
+        data.append(_faq_jsonld())
     blocks = ''.join(
         '<script type="application/ld+json">'
         + json.dumps(d, separators=(',', ':'))
@@ -233,7 +279,7 @@ def copy_static_assets(out_dir: str):
 
     # crawler/discovery files: robots.txt + sitemap.xml (search engines),
     # llms.txt (AI assistants — mirrors the one in the main EPL repo)
-    for fname in ('robots.txt', 'sitemap.xml', 'llms.txt'):
+    for fname in ('robots.txt', 'sitemap.xml', 'llms.txt', 'llms-full.txt'):
         src = os.path.join(assets_dir, fname)
         if os.path.exists(src):
             shutil.copy(src, os.path.join(out_dir, fname))
@@ -245,7 +291,11 @@ def copy_static_assets(out_dir: str):
 def main():
     out_dir = os.path.join(HERE, 'dist')
     if '--out' in sys.argv:
-        out_dir = os.path.abspath(sys.argv[sys.argv.index('--out') + 1])
+        idx = sys.argv.index('--out')
+        if idx + 1 >= len(sys.argv):
+            print('Error: --out requires a directory argument', file=sys.stderr)
+            return 2
+        out_dir = os.path.abspath(sys.argv[idx + 1])
     os.makedirs(out_dir, exist_ok=True)
 
     port = _free_port()
@@ -282,6 +332,17 @@ def main():
                 html = fix_headings(html)
                 html = inject_meta(html)
                 html = inject_jsonld(html)
+            elif route == '/what-is-epl':
+                page_url = SITE_URL + route.lstrip('/')
+                if 'rel="canonical"' not in html:
+                    html = html.replace(
+                        '</head>',
+                        f'<link rel="canonical" href="{page_url}">'
+                        f'<meta name="robots" content="index,follow">'
+                        f'<meta property="og:url" content="{page_url}">'
+                        f'<meta property="og:type" content="article">'
+                        '</head>', 1)
+                html = inject_jsonld(html, route)
             path = os.path.join(out_dir, fname)
             with open(path, 'w', encoding='utf-8') as fh:
                 fh.write(html)
